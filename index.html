@@ -1,14 +1,32 @@
 <!doctype html>
 <html lang="en">
   <head>
-      <meta charset="UTF-8" />
-          <link rel="icon" type="image/png" href="/icon.png" />
-              <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-                  <title>workout-app</title>
-                    </head>
-                      <body>
-                          <div id="root"></div>
-                              <script type="module" src="/src/main.jsx"></script>
-                                </body>
-                                </html>
-                                >
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Workout App</title>
+
+    <!-- Favicon -->
+    <link rel="icon" type="image/png" href="/icon-192.png" />
+
+    <!-- PWA Manifest -->
+    <link rel="manifest" href="/manifest.webmanifest" />
+
+    <!-- iOS / Mobile Meta -->
+    <link rel="apple-touch-icon" href="/icon-512.png" />
+    <meta name="apple-mobile-web-app-capable" content="yes" />
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
+    <meta name="apple-mobile-web-app-title" content="Workout App" />
+    <meta name="theme-color" content="#0a0a0a" />
+
+    <!-- Description for SEO / sharing -->
+    <meta
+      name="description"
+      content="Guided ring & dumbbell workouts with voice cues, timers, and progress tracking."
+    />
+  </head>
+
+  <body class="bg-neutral-900 text-neutral-100">
+    <div id="root"></div>
+    <script type="module" src="/src/main.jsx"></script>
+  </body>
+</html>
