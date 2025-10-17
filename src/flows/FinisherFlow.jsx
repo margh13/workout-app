@@ -2,34 +2,91 @@ import React, { useEffect } from "react";
 import useCountdown from "../hooks/useCountdown.js";
 import useVoiceCues from "../hooks/useVoiceCues.js";
 import useBeep from "../hooks/useBeep.js";
+import "../index.css";
 
+function FlowShell({ title, remaining, isRunning, onPause, onResume, onExit, children }) {
+  const minutes = Math.floor(remaining / 60);
+  const seconds = String(remaining % 60).padStart(2, "0");
+  return (
+    <section className="rounded-2xl border border-neutral-800 bg-neutral-900 p-4">
+      <div className="mb-3 flex items-center justify-between">
+        <h1 className="text-xl font-semibold">{title}</h1>
+        <span className="rounded-xl bg-neutral-800 px-2 py-1 text-xs text-neutral-300">
+          {isRunning ? "running" : "paused"}
+        </span>
+      </div>
+      <div className="flex flex-col items-center justify-center py-6">
+        <div className="text-[56px] leading-none tabular-nums">
+          {minutes}:{seconds}
+        </div>
+      </div>
+      {children}
+      <div className="mt-6 grid grid-cols-3 gap-2">
+        <button
+          onClick={onExit}
+          className="rounded-2xl border border-neutral-800 bg-neutral-900 px-3 py-2 text-sm hover:bg-neutral-800"
+        >
+          Exit
+        </button>
+        {isRunning ? (
+          <button
+            onClick={onPause}
+            className="rounded-2xl border border-neutral-800 bg-neutral-900 px-3 py-2 text-sm hover:bg-neutral-800"
+          >
+            Pause
+          </button>
+        ) : (
+          <button
+            onClick={onResume}
+            className="rounded-2xl border border-neutral-800 bg-neutral-900 px-3 py-2 text-sm hover:bg-neutral-800"
+          >
+            Resume
+          </button>
+        )}
+        <button
+          onClick={onExit}
+          className="rounded-2xl bg-gradient-to-br from-amber-500 to-orange-500 px-3 py-2 text-sm text-neutral-900"
+        >
+          Done
+        </button>
+      </div>
+    </section>
+  );
+}
 
 export default function FinisherFlow({ onExit }) {
-const duration = 150; // 2:30 min default finisher
-const { remaining, isRunning, pause, resume } = useCountdown({ duration, autostart: true, onComplete: onExit });
-const speak = useVoiceCues();
-const { shortBeep, longBeep } = useBeep();
+  const duration = 90; // 1.5 minutes
+  const { remaining, isRunning, pause, resume } = useCountdown({
+    duration,
+    autostart: true,
+    onComplete: onExit,
+  });
+  const speak = useVoiceCues();
+  const { shortBeep, longBeep } = useBeep();
 
+  useEffect(() => {
+    speak("Finisher starts. Give it everything you have left!");
+  }, []);
 
-useEffect(() => {
-speak("Finisher starts now. Short and spicy. Stay smooth, stay breathing.");
-}, []);
+  useEffect(() => {
+    if (remaining <= 3 && remaining > 0 && isRunning) shortBeep();
+    if (remaining === 0) longBeep();
+  }, [remaining, isRunning]);
 
-
-useEffect(() => {
-if (remaining <= 3 && remaining > 0 && isRunning) shortBeep();
-if (remaining === 0) longBeep();
-}, [remaining, isRunning]);
-
-
-return (
-<FlowShell title="Finisher" remaining={remaining} isRunning={isRunning} onPause={pause} onResume={resume} onExit={onExit}>
-<ul className="mt-4 list-disc space-y-1 pl-5 text-sm text-neutral-300">
-<li>Burpees × 20s</li>
-<li>High knees × 20s</li>
-<li>Mountain climbers × 20s</li>
-<li>Repeat × 2 rounds</li>
-</ul>
-</FlowShell>
-);
+  return (
+    <FlowShell
+      title="Finisher"
+      remaining={remaining}
+      isRunning={isRunning}
+      onPause={pause}
+      onResume={resume}
+      onExit={onExit}
+    >
+      <ul className="mt-4 list-disc space-y-1 pl-5 text-sm text-neutral-300">
+        <li>Burpees × 30s</li>
+        <li>Mountain climbers × 30s</li>
+        <li>Plank hold × 30s</li>
+      </ul>
+    </FlowShell>
+  );
 }

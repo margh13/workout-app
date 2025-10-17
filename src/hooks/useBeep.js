@@ -1,30 +1,17 @@
 export default function useBeep() {
-const play = (frequency = 800, lengthMs = 160) => {
-try {
-const ctx = new (window.AudioContext || window.webkitAudioContext)();
-const o = ctx.createOscillator();
-const g = ctx.createGain();
-o.connect(g);
-g.connect(ctx.destination);
-o.type = "sine";
-o.frequency.value = frequency;
-g.gain.setValueAtTime(0.0001, ctx.currentTime);
-g.gain.exponentialRampToValueAtTime(0.3, ctx.currentTime + 0.01);
-o.start();
-setTimeout(() => {
-g.gain.exponentialRampToValueAtTime(0.0001, ctx.currentTime + 0.01);
-o.stop();
-ctx.close();
-}, lengthMs);
-} catch {
-// noop
-}
-};
+  const beep = (freq, duration = 200) => {
+    const ctx = new (window.AudioContext || window.webkitAudioContext)();
+    const osc = ctx.createOscillator();
+    const gain = ctx.createGain();
+    osc.connect(gain);
+    gain.connect(ctx.destination);
+    osc.frequency.value = freq;
+    osc.start();
+    gain.gain.setValueAtTime(0.1, ctx.currentTime);
+    osc.stop(ctx.currentTime + duration / 1000);
+  };
 
-
-const shortBeep = () => play(900, 140);
-const longBeep = () => play(600, 400);
-
-
-return { shortBeep, longBeep };
+  const shortBeep = () => beep(800, 150);
+  const longBeep = () => beep(400, 400);
+  return { shortBeep, longBeep };
 }
